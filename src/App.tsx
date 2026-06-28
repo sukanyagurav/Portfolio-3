@@ -202,7 +202,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-light dark:bg-[#0a0a0a] text-slate-800 dark:text-slate-100 selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+    <div className="min-h-screen overflow-x-hidden bg-bg-light dark:bg-[#0a0a0a] text-slate-800 dark:text-slate-100 selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
       {/* Interactive Custom Animated Cursor */}
       <CustomCursor />
 
