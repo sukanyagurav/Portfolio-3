@@ -1,0 +1,8 @@
+{
+  "name": "Sukanya Gurav Portfolio",
+  "description": "An elegant, highly animated interactive developer portfolio for Sukanya Gurav, featuring a dark mode toggle, live GitHub integration, and smooth GSAP animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
