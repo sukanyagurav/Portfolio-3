@@ -116,33 +116,21 @@ export default function CustomCursor() {
     <>
       {/* 1. Precise Inner Dot */}
       <div
-        className={`fixed top-0 left-0 w-2.5 h-2.5 rounded-full pointer-events-none z-50 mix-blend-difference transition-transform duration-100 ease-out -translate-x-1/2 -translate-y-1/2 bg-white`}
+        className={`fixed top-0 left-0 w-2.5 h-2.5 rounded-full pointer-events-none z-[9999] mix-blend-difference transition-transform duration-100 ease-out -translate-x-1/2 -translate-y-1/2 bg-white`}
         style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isClicked ? 0.6 : isHovered ? 1.5 : 1})`,
+          transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isClicked ? 0.6 : 1})`,
         }}
       />
 
       {/* 2. Trailing Ring with Animation */}
       <div
-        className={`fixed top-0 left-0 rounded-full pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 transition-all duration-150 ease-out border ${
-          isHovered
-            ? 'w-12 h-12 bg-white/5 border-slate-900/40 dark:border-white/40 scale-105'
-            : 'w-7 h-7 border-slate-900/30 dark:border-white/30 scale-100'
-        } ${isClicked ? 'scale-75 border-teal-500/80 dark:border-teal-400/80' : ''}`}
+        className={`fixed top-0 left-0 w-7 h-7 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-all duration-150 ease-out border border-slate-900/30 dark:border-white/30 ${
+          isClicked ? 'scale-75 border-teal-500/80 dark:border-teal-400/80' : ''
+        }`}
         style={{
           transform: `translate3d(${trailPosition.x}px, ${trailPosition.y}px, 0)`,
         }}
-      >
-        {/* Subtle center ring crosshair lines on hover to give a tech-craftsmanship look */}
-        {isHovered && (
-          <div className="absolute inset-0 flex items-center justify-center animate-spin [animation-duration:10s]">
-            <span className="w-1.5 h-[1px] bg-slate-900/40 dark:bg-white/40 absolute left-0" />
-            <span className="w-1.5 h-[1px] bg-slate-900/40 dark:bg-white/40 absolute right-0" />
-            <span className="h-1.5 w-[1px] bg-slate-900/40 dark:bg-white/40 absolute top-0" />
-            <span className="h-1.5 w-[1px] bg-slate-900/40 dark:bg-white/40 absolute bottom-0" />
-          </div>
-        )}
-      </div>
+      />
     </>
   );
 }

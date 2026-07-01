@@ -129,30 +129,15 @@ const FALLBACK_REPOS: GitHubRepo[] = [
 ];
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    // Check local storage or system preference
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return true; // Default dark
-  });
-
   const [profile, setProfile] = useState<GitHubProfile | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Sync Dark Mode state with document classes
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  }, []);
 
   // Fetch data from GitHub API
   const fetchGitHubData = async () => {
@@ -206,8 +191,8 @@ export default function App() {
       {/* Interactive Custom Animated Cursor */}
       <CustomCursor />
 
-      {/* Dynamic Header with Dark Mode and Nav Actions */}
-      <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+      {/* Dynamic Header with Nav Actions */}
+      <Header />
 
       {/* Main Container */}
       <main id="main-content">

@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Sun, Moon, Github, Linkedin, Mail } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 
-interface HeaderProps {
-  darkMode: boolean;
-  setDarkMode: (dark: boolean) => void;
-}
-
-export default function Header({ darkMode, setDarkMode }: HeaderProps) {
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-  const toggleBtnRef = useRef<HTMLButtonElement>(null);
 
   // Monitor scroll position to apply background styling
   useEffect(() => {
@@ -95,16 +89,6 @@ export default function Header({ darkMode, setDarkMode }: HeaderProps) {
     }
   }, [isOpen]);
 
-  // Dark mode change animation effect
-  const handleToggle = () => {
-    gsap.fromTo(
-      toggleBtnRef.current,
-      { rotate: 0, scale: 0.8 },
-      { rotate: 360, scale: 1, duration: 0.5, ease: 'back.out(1.7)' }
-    );
-    setDarkMode(!darkMode);
-  };
-
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsOpen(false);
@@ -128,13 +112,30 @@ export default function Header({ darkMode, setDarkMode }: HeaderProps) {
         <a
           href="#home"
           onClick={(e) => handleLinkClick(e, '#home')}
-          className="flex items-center space-x-2 group"
+          className="flex items-center group"
           id="logo-link"
         >
-          <span className="font-sans text-xs md:text-sm font-bold tracking-[0.35em] uppercase text-slate-950 dark:text-white transition-colors duration-300 flex items-center gap-2">
-            <span>SUKANYA</span>
-            <span className="w-1 h-1 bg-slate-950 dark:bg-white rotate-45 inline-block" />
-            <span className="font-light text-slate-500 dark:text-slate-400 tracking-[0.3em]">GURAV</span>
+          <span className="font-sans text-xs md:text-sm uppercase text-white transition-colors duration-300 flex items-center gap-3 select-none">
+            {/* Monogram Box with Border glow effect */}
+            <span className="relative flex items-center justify-center w-8 h-8 rounded bg-white/[0.03] border border-white/10 group-hover:border-teal-400/40 group-hover:bg-teal-500/5 transition-all duration-500 overflow-hidden">
+              {/* Sweep glow effect */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+              <span className="font-mono text-xs font-bold text-teal-400 tracking-wider group-hover:text-white transition-colors duration-300">
+                S
+              </span>
+              <span className="font-mono text-[9px] font-light text-slate-400 group-hover:text-teal-300 transition-colors duration-300 -ml-0.5">
+                G
+              </span>
+            </span>
+            {/* Elegant tracking-rich Typography */}
+            <span className="flex flex-col items-start -space-y-1">
+              <span className="font-bold tracking-[0.25em] text-white group-hover:text-teal-300 transition-colors duration-300 text-[11px] md:text-xs">
+                SUKANYA
+              </span>
+              <span className="text-[8px] font-medium tracking-[0.38em] text-slate-500 group-hover:text-white/60 transition-colors duration-300">
+                GURAV
+              </span>
+            </span>
           </span>
         </a>
 
@@ -165,21 +166,6 @@ export default function Header({ darkMode, setDarkMode }: HeaderProps) {
 
         {/* Action Controls */}
         <div className="flex items-center space-x-4" id="header-actions">
-          {/* Theme Toggle Slider Button */}
-          <button
-            ref={toggleBtnRef}
-            onClick={handleToggle}
-            className="relative w-11 h-6 rounded-full bg-slate-200 dark:bg-[#1a1a1a] border border-slate-300 dark:border-white/20 p-1 flex items-center transition-colors duration-300 cursor-pointer shadow-inner"
-            aria-label="Toggle theme"
-            id="theme-toggle"
-          >
-            <div
-              className={`w-3.5 h-3.5 rounded-full bg-slate-800 dark:bg-white transition-all duration-300 shadow-[0_0_8px_rgba(255,255,255,0.4)] ${
-                darkMode ? 'translate-x-5 bg-white' : 'translate-x-0 bg-slate-800'
-              }`}
-            />
-          </button>
-
           {/* Social Icons (Desktop only) */}
           <div className="hidden lg:flex items-center space-x-3 border-l border-slate-200 dark:border-white/10 pl-4">
             <a
