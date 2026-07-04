@@ -24,45 +24,46 @@ export default function Header() {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
     { name: 'Experience', href: '#experience' },
     { name: 'Projects', href: '#projects' },
+    { name: 'Skills', href: '#skills' },
     { name: 'Contact', href: '#contact' },
   ];
 
-  // Monitor viewport intersections to determine the active section
+  // Monitor scroll position to determine the active section
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-20% 0px -60% 0px',
-      threshold: 0.1,
-    };
+    const sectionIds = navLinks.map((link) => link.href.replace('#', ''));
+    const determineActiveSection = () => {
+      const referenceLine = window.innerHeight * 0.2;
+      let selectedSection = activeSection;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          if (id) {
-            setActiveSection(id);
+      sectionIds.forEach((sectionId) => {
+        const element = document.getElementById(sectionId);
+        if (!element) return;
+
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= referenceLine && rect.bottom > referenceLine) {
+          const distance = Math.abs(rect.top - referenceLine);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            selectedSection = sectionId;
           }
         }
       });
+
+      if (selectedSection !== activeSection) {
+        setActiveSection(selectedSection);
+      }
     };
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    navLinks.forEach((link) => {
-      const id = link.href.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
+    window.addEventListener('scroll', determineActiveSection, { passive: true });
+    determineActiveSection();
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener('scroll', determineActiveSection);
     };
-  }, []);
+  }, [activeSection, navLinks]);
 
   // GSAP animation for mobile menu
   useEffect(() => {
