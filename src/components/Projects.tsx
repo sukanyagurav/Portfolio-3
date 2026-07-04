@@ -14,88 +14,14 @@ interface ProjectsProps {
 
 export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const langContainerRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Reset to first page when search query or language filter changes
+  // Reset to first page when search query changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedLanguage]);
-
-  // Support dragging and wheel-based horizontal scrolling for languages container
-  useEffect(() => {
-    const el = langContainerRef.current;
-    if (!el) return;
-
-    let isDown = false;
-    let startX: number;
-    let startY: number;
-    let scrollLeft: number;
-
-    const handleMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      isDraggingRef.current = false;
-      startX = e.pageX - el.offsetLeft;
-      startY = e.pageY - el.offsetTop;
-      scrollLeft = el.scrollLeft;
-    };
-
-    const handleMouseLeave = () => {
-      isDown = false;
-    };
-
-    const handleMouseUp = () => {
-      isDown = false;
-      // Delay resetting isDraggingRef so that the click handler knows it was a drag
-      setTimeout(() => {
-        isDraggingRef.current = false;
-      }, 50);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      
-      const x = e.pageX - el.offsetLeft;
-      const y = e.pageY - el.offsetTop;
-      const walkX = x - startX;
-      const walkY = y - startY;
-
-      // If the cursor moved significantly, treat it as a drag
-      if (Math.abs(walkX) > 5 || Math.abs(walkY) > 5) {
-        isDraggingRef.current = true;
-      }
-
-      if (isDraggingRef.current) {
-        e.preventDefault();
-        el.scrollLeft = scrollLeft - walkX * 1.5;
-      }
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY !== 0) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-
-    el.addEventListener('mousedown', handleMouseDown);
-    el.addEventListener('mouseleave', handleMouseLeave);
-    el.addEventListener('mouseup', handleMouseUp);
-    el.addEventListener('mousemove', handleMouseMove);
-    el.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      el.removeEventListener('mousedown', handleMouseDown);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-      el.removeEventListener('mouseup', handleMouseUp);
-      el.removeEventListener('mousemove', handleMouseMove);
-      el.removeEventListener('wheel', handleWheel);
-    };
-  }, []);
+  }, [searchQuery]);
 
   // Entrance animations for Section header and search bar
   useEffect(() => {
@@ -156,10 +82,7 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [loading, searchQuery, selectedLanguage, repos, currentPage]);
-
-  // Extract unique languages from repositories to build filter tabs dynamically
-  const languages = ['all', ...Array.from(new Set(repos.map(repo => repo.language).filter(Boolean) as string[]))];
+  }, [loading, searchQuery, repos, currentPage]);
 
   // Language color map replicating GitHub's scheme
   const getLanguageColor = (lang: string | null): string => {
@@ -178,13 +101,12 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
     return colors[lang.toLowerCase()] || '#14b8a6';
   };
 
-  // Filter repositories based on query and language
+  // Filter repositories based on query
   const filteredRepos = repos.filter((repo) => {
     const matchesSearch =
       repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesLang = selectedLanguage === 'all' || repo.language === selectedLanguage;
-    return matchesSearch && matchesLang;
+    return matchesSearch;
   });
 
   // Pagination calculations
@@ -224,10 +146,10 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
           </p>
         </div>
 
-        {/* Search, Filter, and Action Bar */}
+        {/* Search & Action Bar */}
         <div className="search-filter-panel mb-16 flex flex-col gap-4 max-w-5xl mx-auto">
           
-          {/* Row 1: Search & Refresh Button side-by-side */}
+          {/* Search & Refresh Button side-by-side */}
           <div className="flex items-center gap-2 w-full">
             {/* Search Box */}
             <div className="relative flex-1">
@@ -255,30 +177,6 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
             >
               <RotateCw size={14} className={loading ? 'animate-spin' : ''} />
             </button>
-          </div>
-
-          {/* Row 2: Language Selection Buttons below search */}
-          <div
-            ref={langContainerRef}
-            className="flex flex-nowrap overflow-x-auto w-full gap-1 p-1 border border-black/10 dark:border-white/10 rounded-none bg-transparent scroll-smooth no-scrollbar cursor-grab active:cursor-grabbing select-none"
-          >
-            {languages.slice(0, 5).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => {
-                  if (isDraggingRef.current) return;
-                  setSelectedLanguage(lang);
-                }}
-                className={`px-3 py-1.5 text-[9px] uppercase tracking-[0.15em] font-sans font-medium transition-all duration-200 cursor-pointer rounded-none shrink-0 whitespace-nowrap ${
-                  selectedLanguage === lang
-                    ? 'bg-slate-900 text-[#faf9f6] dark:bg-white dark:text-slate-950 shadow-none'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'
-                }`}
-                id={`lang-filter-${lang.toLowerCase()}`}
-              >
-                {lang === 'all' ? 'All' : lang}
-              </button>
-            ))}
           </div>
 
         </div>
@@ -316,17 +214,16 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
               </div>
               <h3 className="font-serif italic text-lg text-slate-800 dark:text-white">No projects found</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 px-4 uppercase tracking-[0.1em] font-sans">
-                No repositories matching "{searchQuery}" under "{selectedLanguage}".
+                No repositories matching "{searchQuery}".
               </p>
               <button
                 onClick={() => {
                   setSearchQuery('');
-                  setSelectedLanguage('all');
                 }}
                 className="mt-6 px-5 py-2.5 border border-slate-900 dark:border-white bg-slate-900 text-white dark:bg-white dark:text-black hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.2em] text-[10px] transition-all cursor-pointer rounded-none"
                 id="reset-filters-btn"
               >
-                Clear Filters
+                Clear Search
               </button>
             </div>
           ) : (

@@ -115,18 +115,7 @@ export default function Header() {
           className="flex items-center group"
           id="logo-link"
         >
-          <span className="font-sans text-xs md:text-sm uppercase text-white transition-colors duration-300 flex items-center gap-3 select-none">
-            {/* Monogram Box with Border glow effect */}
-            <span className="relative flex items-center justify-center w-8 h-8 rounded bg-white/[0.03] border border-white/10 group-hover:border-teal-400/40 group-hover:bg-teal-500/5 transition-all duration-500 overflow-hidden">
-              {/* Sweep glow effect */}
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-              <span className="font-mono text-xs font-bold text-teal-400 tracking-wider group-hover:text-white transition-colors duration-300">
-                S
-              </span>
-              <span className="font-mono text-[9px] font-light text-slate-400 group-hover:text-teal-300 transition-colors duration-300 -ml-0.5">
-                G
-              </span>
-            </span>
+          <span className="font-sans text-xs md:text-sm uppercase text-white transition-colors duration-300 flex items-center select-none">
             {/* Elegant tracking-rich Typography */}
             <span className="flex flex-col items-start -space-y-1">
               <span className="font-bold tracking-[0.25em] text-white group-hover:text-teal-300 transition-colors duration-300 text-[11px] md:text-xs">
