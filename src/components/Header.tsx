@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Github, Linkedin, Mail } from 'lucide-react';
+import { Menu, X, Github, Mail } from 'lucide-react';
 import gsap from 'gsap';
 
 export default function Header() {

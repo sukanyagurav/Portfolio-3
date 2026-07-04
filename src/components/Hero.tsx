@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { ArrowDownRight, Github, Mail, Sparkles, MapPin } from 'lucide-react';
+import { ArrowDownRight, Mail, Sparkles, MapPin } from 'lucide-react';
 import gsap from 'gsap';
 import { GitHubProfile } from '../types';
 
 interface HeroProps {
   profile: GitHubProfile | null;
-  loading: boolean;
 }
 
-export default function Hero({ profile, loading }: HeroProps) {
+export default function Hero({ profile }: HeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
@@ -113,9 +112,6 @@ export default function Hero({ profile, loading }: HeroProps) {
 
             {/* Main Greeting and Name */}
             <div className="space-y-3">
-              <span className="font-serif font-light text-slate-400 dark:text-slate-500 italic block text-xl md:text-2xl">
-                Creative developer & portfolio
-              </span>
               <h1
                 ref={titleRef}
                 className="font-serif font-light text-5xl sm:text-6xl md:text-8xl leading-none text-slate-900 dark:text-white tracking-wide"
@@ -131,9 +127,7 @@ export default function Hero({ profile, loading }: HeroProps) {
             >
               <span>Creative Frontend Engineer</span>
               <span className="text-slate-300 dark:text-slate-800">•</span>
-              <span>UI/UX Specialist</span>
-              <span className="text-slate-300 dark:text-slate-800">•</span>
-              <span>React Architect</span>
+              <span>React Developer</span>
             </div>
 
             {/* Bio / Description */}

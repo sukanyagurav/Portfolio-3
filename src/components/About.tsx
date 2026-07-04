@@ -1,5 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { User, Code, Heart, Award, Users, BookOpen, Layers } from 'lucide-react';
+import {
+  User,
+  Code,
+  Heart,
+  Award,
+  Users,
+  BookOpen,
+} from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GitHubProfile } from '../types';
@@ -28,7 +35,7 @@ export default function About({ profile }: AboutProps) {
             trigger: '.about-reveal-title',
             start: 'top 85%',
           },
-        }
+        },
       );
 
       // Stagger stats cards
@@ -45,7 +52,7 @@ export default function About({ profile }: AboutProps) {
             trigger: '.stats-container',
             start: 'top 85%',
           },
-        }
+        },
       );
 
       // Left column text slide-in
@@ -60,7 +67,7 @@ export default function About({ profile }: AboutProps) {
             trigger: '.about-text-left',
             start: 'top 80%',
           },
-        }
+        },
       );
 
       // Right column bento grid reveal
@@ -75,7 +82,7 @@ export default function About({ profile }: AboutProps) {
             trigger: '.about-card-right',
             start: 'top 80%',
           },
-        }
+        },
       );
     }, sectionRef);
 
@@ -86,19 +93,34 @@ export default function About({ profile }: AboutProps) {
     {
       label: 'Public Repos',
       value: profile?.public_repos ?? '12+',
-      icon: <Code className="text-slate-400 dark:text-slate-500" size={20} />,
+      icon: (
+        <Code
+          className="text-slate-400 dark:text-slate-500"
+          size={20}
+        />
+      ),
       desc: 'Created repositories',
     },
     {
       label: 'Followers',
       value: profile?.followers ?? '15+',
-      icon: <Users className="text-slate-400 dark:text-slate-500" size={20} />,
+      icon: (
+        <Users
+          className="text-slate-400 dark:text-slate-500"
+          size={20}
+        />
+      ),
       desc: 'Global connections',
     },
     {
       label: 'Following',
       value: profile?.following ?? '20+',
-      icon: <Heart className="text-slate-400 dark:text-slate-500" size={20} />,
+      icon: (
+        <Heart
+          className="text-slate-400 dark:text-slate-500"
+          size={20}
+        />
+      ),
       desc: 'Industry tracking',
     },
   ];
@@ -106,18 +128,25 @@ export default function About({ profile }: AboutProps) {
   const coreValues = [
     {
       title: 'Performance First',
-      description: 'Writing semantic, clean code, compressed assets, and leveraging virtualization for rapid load speeds and smooth scrolling.',
-      icon: <Award className="text-slate-400 dark:text-slate-500" size={16} />,
-    },
-    {
-      title: 'Flawless Adaptability',
-      description: 'Strict testing for comprehensive responsive grid layouts that adapt beautifully across massive screens and compact phone viewports.',
-      icon: <Layers className="text-slate-400 dark:text-slate-500" size={16} />,
+      description:
+        'Writing semantic, clean code, compressed assets, and leveraging virtualization for rapid load speeds and smooth scrolling.',
+      icon: (
+        <Award
+          className="text-slate-400 dark:text-slate-500"
+          size={16}
+        />
+      ),
     },
     {
       title: 'Interactive Design',
-      description: 'Crafting detailed interaction pathways, dynamic hover cues, and physics-inspired GSAP micro-interactions.',
-      icon: <BookOpen className="text-slate-400 dark:text-slate-500" size={16} />,
+      description:
+        'Crafting detailed interaction pathways, dynamic hover cues, and physics-inspired GSAP micro-interactions.',
+      icon: (
+        <BookOpen
+          className="text-slate-400 dark:text-slate-500"
+          size={16}
+        />
+      ),
     },
   ];
 
@@ -128,11 +157,13 @@ export default function About({ profile }: AboutProps) {
       className="py-24 md:py-36 bg-bg-light dark:bg-[#0a0a0a] border-b border-black/5 dark:border-white/10 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        
         {/* Section Header */}
         <div className="about-reveal-title text-center max-w-3xl mx-auto mb-20 md:mb-28">
           <div className="inline-flex items-center space-x-2 px-4 py-1.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-[0.2em] font-sans bg-transparent mb-6">
-            <User size={11} className="text-slate-400 dark:text-slate-500" />
+            <User
+              size={11}
+              className="text-slate-400 dark:text-slate-500"
+            />
             <span>Biography & Metrics</span>
           </div>
           <h2 className="font-serif font-light text-3xl sm:text-5xl md:text-6xl text-slate-900 dark:text-white tracking-wide leading-tight italic">
@@ -153,9 +184,15 @@ export default function About({ profile }: AboutProps) {
                 {stat.icon}
               </div>
               <div>
-                <p className="font-serif font-light text-3xl text-slate-900 dark:text-white">{stat.value}</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] font-sans font-medium text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
-                <p className="text-[9px] uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 font-sans mt-0.5">{stat.desc}</p>
+                <p className="font-serif font-light text-3xl text-slate-900 dark:text-white">
+                  {stat.value}
+                </p>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-sans font-medium text-slate-500 dark:text-slate-400 mt-1">
+                  {stat.label}
+                </p>
+                <p className="text-[9px] uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 font-sans mt-0.5">
+                  {stat.desc}
+                </p>
               </div>
             </div>
           ))}
@@ -163,19 +200,25 @@ export default function About({ profile }: AboutProps) {
 
         {/* Narrative columns */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          
           {/* Left bio narrative */}
           <div className="about-text-left lg:col-span-6 space-y-8">
             <h3 className="font-serif font-light text-2xl md:text-3xl italic text-slate-900 dark:text-white">
               My Professional Mission
             </h3>
             <p className="font-serif text-lg text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-              I am a driven software creator who sits at the intersection of creative front-end design and solid engineering paradigms. I craft dynamic web experiences that emphasize structural precision, accessibility standards, and absolute client delight.
+              I am a driven software creator who sits at the intersection of
+              creative front-end design and solid engineering paradigms. I craft
+              dynamic web experiences that emphasize structural precision,
+              accessibility standards, and absolute client delight.
             </p>
             <p className="font-serif text-lg text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-              With a primary tech stack centering React, Tailwind CSS, TypeScript, and interactive tools like GSAP, I turn complex interfaces into smooth, natural digital touchpoints. I focus on writing maintainable, component-driven modular architectures that look fantastic and perform cleanly.
+              With a primary tech stack centering React, Tailwind CSS,
+              TypeScript, and interactive tools like GSAP, I turn complex
+              interfaces into smooth, natural digital touchpoints. I focus on
+              writing maintainable, component-driven modular architectures that
+              look fantastic and perform cleanly.
             </p>
-            
+
             {/* Direct Bio Bullet points */}
             <div className="space-y-4 pt-4 text-[10px] uppercase tracking-[0.2em] font-sans text-slate-500 dark:text-slate-400">
               <div className="flex items-center space-x-3">
@@ -198,7 +241,7 @@ export default function About({ profile }: AboutProps) {
             <h3 className="font-serif font-light text-2xl md:text-3xl italic text-slate-900 dark:text-white mb-8 lg:mt-0">
               Core Engineering Values
             </h3>
-            
+
             <div className="space-y-4">
               {coreValues.map((value, idx) => (
                 <div
@@ -221,9 +264,7 @@ export default function About({ profile }: AboutProps) {
               ))}
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

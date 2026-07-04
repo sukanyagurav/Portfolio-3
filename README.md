@@ -1,20 +1,71 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Portfolio 3
 
-# Run and deploy your AI Studio app
+A personal portfolio website built with React, TypeScript, Vite, Tailwind CSS, and GSAP.
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/44ffb232-12e7-42d8-9b2b-4fe998236f8c
+This project showcases portfolio work, skills, experience, and contact information using a modern single-page layout with animated sections.
 
-## Run Locally
+### Key features
 
-**Prerequisites:**  Node.js
+- React + TypeScript frontend
+- Vite development build system
+- Local project data rendering from `src/constant/projectsData.js`
+- Animated section reveals with GSAP and ScrollTrigger
+- Responsive navigation and mobile menu
+- Custom cursor for desktop interactions
+- Footer with social links and quick actions
 
+## Project structure
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- `src/App.tsx` - main page composition and GitHub profile fetch
+- `src/components/` - page sections and reusable UI components
+- `src/constant/projectsData.js` - local project metadata used in the portfolio
+- `src/types.ts` - shared TypeScript types
+- `src/main.tsx` - Vite entry point
+- `src/index.css` - global styles
+
+## Run locally
+
+### Prerequisites
+
+- Node.js
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
+
+```bash
+npm run dev
+```
+
+Open the URL shown in the terminal to view the portfolio locally.
+
+## Build for production
+
+```bash
+npm run build
+```
+
+## Notes
+
+- The portfolio uses a local `projectsData` file instead of live GitHub repository fetches for the projects section.
+- The site forces dark mode by default via `document.documentElement.classList.add('dark')`.
+
+## Customize
+
+- Update `src/constant/projectsData.js` to change displayed projects.
+- Edit `src/components/Footer.tsx` to update social links and footer actions.
+- Modify `src/components/Skills.tsx` to change the skill list.
+- Update `src/App.tsx` and `src/types.ts` if you want to customize profile or data behavior.
+
+## Scripts
+
+- `npm run dev` — start local development server
+- `npm run build` — build production output
+- `npm run preview` — preview the production build
+- `npm run lint` — run TypeScript type checking

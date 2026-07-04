@@ -3,7 +3,6 @@ import { useEffect, useState, useRef } from 'react';
 export default function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [trailPosition, setTrailPosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
@@ -42,39 +41,11 @@ export default function CustomCursor() {
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
 
-    // Setup interactive hover event listeners for clickable elements
-    const addHoverListeners = () => {
-      const clickables = document.querySelectorAll(
-        'a, button, input, select, textarea, [role="button"], .cursor-pointer, [data-hover-glow]'
-      );
-      
-      const handleMouseEnter = () => setIsHovered(true);
-      const handleMouseLeave = () => setIsHovered(false);
-
-      clickables.forEach((el) => {
-        el.addEventListener('mouseenter', handleMouseEnter);
-        el.addEventListener('mouseleave', handleMouseLeave);
-      });
-
-      return () => {
-        clickables.forEach((el) => {
-          el.removeEventListener('mouseenter', handleMouseEnter);
-          el.removeEventListener('mouseleave', handleMouseLeave);
-        });
-      };
-    };
-
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
     document.body.addEventListener('mouseleave', onMouseLeave);
     document.body.addEventListener('mouseenter', onMouseEnter);
-
-    // Observe changes in the DOM to attach hover listeners to dynamically added/modified elements
-    const observer = new MutationObserver(addHoverListeners);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    const removeHoverListeners = addHoverListeners();
 
     // Smooth trail animation loop
     const updateTrail = () => {
@@ -101,8 +72,6 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup', onMouseUp);
       document.body.removeEventListener('mouseleave', onMouseLeave);
       document.body.removeEventListener('mouseenter', onMouseEnter);
-      observer.disconnect();
-      removeHoverListeners();
       document.documentElement.classList.remove('custom-cursor-enabled');
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);

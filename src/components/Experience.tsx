@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Briefcase, Calendar, Trophy } from 'lucide-react';
+import { Briefcase, Calendar } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,8 +11,6 @@ interface ExperienceItem {
   company: string;
   period: string;
   location: string;
-  description: string;
-  achievements: string[];
   skills: string[];
   metric?: {
     value: string;
@@ -23,58 +21,20 @@ interface ExperienceItem {
 const EXPERIENCES: ExperienceItem[] = [
   {
     id: 'exp-1',
-    role: 'Creative Frontend Engineer',
-    company: 'Freelance & Creative Labs',
-    period: '2024 - Present',
-    location: 'Mumbai, India (Remote)',
-    description: 'Developing high-performance, pixel-perfect web interfaces and bespoke interactive experiences for global clients using modern React, Tailwind CSS, and advanced motion libraries.',
-    achievements: [
-      'Engineered a flagship digital showcase with scroll-driven parallax grids and interactive D3 analytics, increasing visitor engagement by 40%.',
-      'Developed modular weather forecasting widgets and agile task coordinators using strict custom React Hooks and client-side memory architectures.',
-      'Refactored legacy design files into highly performant and accessible React components, lowering cumulative layout shifts (CLS) to near zero.'
-    ],
-    skills: ['React', 'TypeScript', 'GSAP', 'Tailwind CSS', 'D3.js', 'Redux'],
-    metric: {
-      value: '40%+',
-      label: 'Engagement Boost'
-    }
+    role: 'Associate software developer',
+    company: 'Kyndryl',
+    period: '2023 - Present',
+    location: 'Bangalore, India',
+    skills: ['Svelte5', 'TypeScript', 'Lit JS'],
   },
   {
     id: 'exp-2',
-    role: 'React UI Specialist',
-    company: 'Tech Solutions Hub',
-    period: '2023 - 2024',
-    location: 'Remote',
-    description: 'Led the UI/UX frontend overhaul for high-fidelity interactive platforms, focusing on component-driven system architectures and modular typography standardization.',
-    achievements: [
-      'Architected a custom state-driven project board utilizing deep localStorage synchronization and virtualized grid panels for immediate performance.',
-      'Designed and coded modern layout layers using pure CSS Grid, Flexbox, and Tailwind, securing perfect responsiveness across mobile, tablet, and wide displays.',
-      'Implemented fluid micro-animations and custom theme pipelines, boosting user-satisfaction ratings on internal panels by 25%.'
-    ],
+    role: 'Associate Technical Engineer',
+    company: 'Kyndryl',
+    period: '2021 - 2023',
+    location: 'Bangalore, India',
     skills: ['React', 'JavaScript', 'CSS Grid', 'REST APIs', 'Vite', 'Figma'],
-    metric: {
-      value: '25%+',
-      label: 'UX Score Increase'
-    }
   },
-  {
-    id: 'exp-3',
-    role: 'Frontend UI Developer Intern',
-    company: 'Innovate Tech Labs',
-    period: '2022 - 2023',
-    location: 'Hybrid',
-    description: 'Coordinated with creative directors and engineering teams to translate layout mocks into clean, semantic, and modular frontend code bases.',
-    achievements: [
-      'Developed static landing pages and animated interactive campaigns utilizing lightweight CSS transitions and optimized multimedia assets.',
-      'Wrote comprehensive unit and regression tests, eliminating critical frontend rendering bugs prior to production releases.',
-      'Assisted in building custom SVG visualizations and responsive tables using standard DOM manipulation and utility wrappers.'
-    ],
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'GSAP', 'Git', 'Responsive Design'],
-    metric: {
-      value: '99%',
-      label: 'Code Quality Score'
-    }
-  }
 ];
 
 export default function Experience() {

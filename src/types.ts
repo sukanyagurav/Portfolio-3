@@ -44,12 +44,11 @@ export interface SkillItem {
 }
 
 export interface CustomProject {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  tech: string[];
-  githubUrl: string;
-  liveUrl?: string;
-  stars: number;
-  forks: number;
+  imageUrl: string;
+  liveLink: string;
+  githubLink: string;
+  description?: string;
+  tech?: string[];
 }

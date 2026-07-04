@@ -1,18 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { Github, ExternalLink, Star, GitFork, Search, Sparkles, Filter, Code, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Github, ExternalLink, Search, Code, ChevronLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { GitHubRepo } from '../types';
+import { CustomProject } from '../types';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectsProps {
-  repos: GitHubRepo[];
-  loading: boolean;
-  onRefresh: () => void;
+  repos: CustomProject[];
 }
 
-export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
+export default function Projects({ repos }: ProjectsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,9 +56,21 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
     return () => ctx.revert();
   }, []);
 
-  // Card stagger entrance triggers whenever repos load or filters change
+  // Filter projects based on query
+  const filteredRepos = repos.filter((repo) => {
+    const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredRepos.length / itemsPerPage);
+  const indexOfLastRepo = currentPage * itemsPerPage;
+  const indexOfFirstRepo = indexOfLastRepo - itemsPerPage;
+  const currentRepos = filteredRepos.slice(indexOfFirstRepo, indexOfLastRepo);
+
+  // Card stagger entrance triggers whenever repos or filters change
   useEffect(() => {
-    if (loading || filteredRepos.length === 0) return;
+    if (filteredRepos.length === 0) return;
 
     const ctx = gsap.context(() => {
       const config: gsap.TweenVars = {
@@ -72,9 +82,6 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
         ease: 'power2.out',
       };
 
-      // Only use ScrollTrigger for the initial scroll-into-view when the page loads
-      // and there's no active search filter. This ensures subsequent search updates
-      // animate immediately rather than getting stuck at opacity: 0 due to ScrollTrigger
       if (!searchQuery && currentPage === 1) {
         config.scrollTrigger = {
           trigger: '.projects-grid-container',
@@ -90,36 +97,7 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [loading, searchQuery, repos, currentPage]);
-
-  // Language color map replicating GitHub's scheme
-  const getLanguageColor = (lang: string | null): string => {
-    if (!lang) return '#94a3b8';
-    const colors: { [key: string]: string } = {
-      javascript: '#f1e05a',
-      typescript: '#3178c6',
-      html: '#e34c26',
-      css: '#563d7c',
-      java: '#b07219',
-      python: '#3572a5',
-      vue: '#41b883',
-      c: '#555555',
-      'c++': '#f34b7d',
-    };
-    return colors[lang.toLowerCase()] || '#14b8a6';
-  };
-
-  // Filter repositories based on query
-  const filteredRepos = repos.filter((repo) => {
-    const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
-
-  // Pagination calculations
-  const totalPages = Math.ceil(filteredRepos.length / itemsPerPage);
-  const indexOfLastRepo = currentPage * itemsPerPage;
-  const indexOfFirstRepo = indexOfLastRepo - itemsPerPage;
-  const currentRepos = filteredRepos.slice(indexOfFirstRepo, indexOfLastRepo);
+  }, [searchQuery, filteredRepos.length, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -145,74 +123,33 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
             <span>Portfolio Work</span>
           </div>
           <h2 className="font-serif font-light text-3xl sm:text-5xl text-slate-900 dark:text-white tracking-wide leading-tight italic">
-            Featured GitHub Repositories
+            Featured Projects
           </h2>
           <p className="font-serif text-lg text-slate-500 dark:text-slate-400 font-light mt-3 max-w-lg mx-auto italic">
-            These projects are dynamically pulled from my GitHub profile live, representing my latest developments, frameworks, and tools.
+            A curated set of portfolio projects drawn from local project data, showcasing live demos and source code links.
           </p>
         </div>
 
-        {/* Search & Action Bar */}
+        {/* Search Bar */}
         <div className="search-filter-panel mb-16 flex flex-col gap-4 max-w-5xl mx-auto">
-          
-          {/* Search & Refresh Button side-by-side */}
-          <div className="flex items-center gap-2 w-full">
-            {/* Search Box */}
-            <div className="relative flex-1">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                <Search size={15} />
-              </span>
-              <input
-                type="text"
-                placeholder="Search projects..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-transparent border border-black/10 dark:border-white/10 rounded-none text-xs uppercase tracking-[0.1em] placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white"
-                id="projects-search-input"
-              />
-            </div>
-
-            {/* Live Synchronizer Button besides search */}
-            <button
-              onClick={onRefresh}
-              disabled={loading}
-              className="p-3 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white bg-transparent transition-all duration-300 cursor-pointer flex items-center justify-center rounded-none shrink-0"
-              title="Sync GitHub Live Data"
-              aria-label="Refresh GitHub Data"
-              id="projects-refresh-btn"
-            >
-              <RotateCw size={14} className={loading ? 'animate-spin' : ''} />
-            </button>
+          <div className="relative w-full">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+              <Search size={15} />
+            </span>
+            <input
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-transparent border border-black/10 dark:border-white/10 rounded-none text-xs uppercase tracking-[0.1em] placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white"
+              id="projects-search-input"
+            />
           </div>
-
         </div>
 
         {/* Projects Cards Container */}
         <div className="projects-grid-container min-h-[400px]">
-          {loading ? (
-            /* Card Loading Skeletons */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="p-6 rounded-none bg-slate-100 dark:bg-neutral-900/50 border border-black/5 dark:border-white/5 space-y-4 animate-pulse"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="h-6 w-32 bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                    <div className="h-8 w-8 bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-4 w-full bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                    <div className="h-4 w-5/6 bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                  </div>
-                  <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-neutral-800/80">
-                    <div className="h-4 w-16 bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                    <div className="h-4 w-12 bg-slate-200 dark:bg-neutral-800 rounded-none" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : filteredRepos.length === 0 ? (
+          {filteredRepos.length === 0 ? (
             /* Empty Filter / Search Result State */
              <div className="text-center py-16 bg-white/50 dark:bg-[#111] border border-dashed border-black/10 dark:border-white/10 max-w-lg mx-auto rounded-none">
               <div className="w-12 h-12 border border-black/10 dark:border-white/10 bg-transparent flex items-center justify-center text-slate-400 mx-auto mb-4 rounded-none">
@@ -243,10 +180,9 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
                     id={`repo-card-${repo.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     <div className="space-y-5">
-                      {/* Repository Name & Image Preview */}
                       <div className="space-y-4">
                         <a
-                          href={repo.homepage || repo.html_url}
+                          href={repo.liveLink || repo.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block hover:opacity-80 transition-opacity"
@@ -256,14 +192,14 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
                           </h3>
                         </a>
                         <a
-                          href={repo.homepage || repo.html_url}
+                          href={repo.liveLink || repo.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block overflow-hidden"
                         >
                           <div className="relative aspect-[16/10] w-full overflow-hidden border border-black/5 dark:border-white/5 bg-slate-100 dark:bg-neutral-900">
                             <img
-                              src={`https://picsum.photos/seed/${encodeURIComponent(repo.name)}/600/375`}
+                              src={repo.imageUrl}
                               alt={repo.name}
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
@@ -272,66 +208,27 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
                         </a>
                       </div>
 
-                      {/* Tags of topics */}
-                      {repo.topics && repo.topics.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {repo.topics.slice(0, 3).map((tag) => (
-                            <span
-                              key={tag}
-                              className="px-2.5 py-1 border border-black/5 dark:border-white/5 text-slate-400 dark:text-slate-500 font-sans text-[9px] uppercase tracking-[0.1em]"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Repository Stats (Stars, Forks, Main Language) */}
-                    <div className="flex items-center justify-between pt-4 mt-6 border-t border-black/5 dark:border-white/5 text-slate-400 text-[10px] uppercase tracking-[0.15em] font-sans">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="w-1.5 h-1.5 inline-block"
-                          style={{ backgroundColor: getLanguageColor(repo.language) }}
-                        />
-                        <span className="text-slate-500 dark:text-slate-400 font-medium capitalize">
-                          {repo.language || 'Documentation'}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-0.5 hover:text-slate-900 dark:hover:text-white transition-colors" title="GitHub Stars">
-                          <Star size={11} />
-                          {repo.stargazers_count}
-                        </span>
-                        <span className="flex items-center gap-0.5 hover:text-slate-900 dark:hover:text-white transition-colors" title="GitHub Forks">
-                          <GitFork size={11} />
-                          {repo.forks_count}
-                        </span>
-                        <span className="text-slate-300 dark:text-neutral-800">|</span>
+                      <div className="flex flex-wrap gap-2">
                         <a
-                          href={repo.html_url}
+                          href={repo.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-slate-900 dark:hover:text-white transition-colors p-0.5"
-                          title="View Source on GitHub"
-                          id={`repo-src-link-${repo.id}`}
+                          className="inline-flex items-center gap-2 px-3 py-2 border border-black/10 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all text-xs uppercase tracking-[0.12em] font-semibold rounded-none"
+                          title="View source code"
                         >
                           <Github size={12} />
+                          Source
                         </a>
-                        {repo.homepage && (
-                          <a
-                            href={repo.homepage}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 px-2 py-0.5 border border-black/10 dark:border-white/10 hover:border-slate-950 dark:hover:border-white text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white transition-all font-sans text-[9px] uppercase tracking-wider font-semibold bg-white/40 dark:bg-black/20"
-                            title="Launch Live Demo"
-                            id={`repo-live-link-${repo.id}`}
-                          >
-                            <span>Live URL</span>
-                            <ExternalLink size={10} />
-                          </a>
-                        )}
+                        <a
+                          href={repo.liveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-2 border border-black/10 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all text-xs uppercase tracking-[0.12em] font-semibold rounded-none"
+                          title="Open live demo"
+                        >
+                          <span>Live Demo</span>
+                          <ExternalLink size={12} />
+                        </a>
                       </div>
                     </div>
                   </div>
