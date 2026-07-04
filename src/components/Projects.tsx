@@ -63,21 +63,29 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
     if (loading || filteredRepos.length === 0) return;
 
     const ctx = gsap.context(() => {
+      const config: gsap.TweenVars = {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        stagger: 0.06,
+        duration: 0.5,
+        ease: 'power2.out',
+      };
+
+      // Only use ScrollTrigger for the initial scroll-into-view when the page loads
+      // and there's no active search filter. This ensures subsequent search updates
+      // animate immediately rather than getting stuck at opacity: 0 due to ScrollTrigger
+      if (!searchQuery && currentPage === 1) {
+        config.scrollTrigger = {
+          trigger: '.projects-grid-container',
+          start: 'top 85%',
+        };
+      }
+
       gsap.fromTo(
         '.project-card-item',
-        { opacity: 0, y: 40, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          stagger: 0.08,
-          duration: 0.7,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.projects-grid-container',
-            start: 'top 85%',
-          },
-        }
+        { opacity: 0, y: 20, scale: 0.98 },
+        config
       );
     }, sectionRef);
 
@@ -103,9 +111,7 @@ export default function Projects({ repos, loading, onRefresh }: ProjectsProps) {
 
   // Filter repositories based on query
   const filteredRepos = repos.filter((repo) => {
-    const matchesSearch =
-      repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
