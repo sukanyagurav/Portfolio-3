@@ -49,7 +49,7 @@ export default function Footer() {
                 <Mail size={14} />
               </a>
               <a
-                href="https://www.linkedin.com/in/sukanyagurav"
+                href="https://www.linkedin.com/in/sukanya-gurav-frontend-developer/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all"
