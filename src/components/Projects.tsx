@@ -184,7 +184,7 @@ export default function Projects({ repos }: ProjectsProps) {
             id="toggle-practice-archive"
           >
             <span className="font-serif italic text-base text-slate-700 dark:text-slate-300">
-              {practiceRepos.length} smaller coding-challenge exercises (Frontend Mentor & practice builds)
+             View more projects
             </span>
             <ChevronDown
               size={16}
@@ -201,7 +201,7 @@ export default function Projects({ repos }: ProjectsProps) {
                 </span>
                 <input
                   type="text"
-                  placeholder="Search practice projects..."
+                  placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 bg-transparent border border-black/10 dark:border-white/10 rounded-none text-xs uppercase tracking-[0.1em] placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white"
