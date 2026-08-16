@@ -53,9 +53,13 @@ export default function Contact() {
     setErrorMsg('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Sign up free at https://formspree.io, create a form, and paste your endpoint ID below.
+  // Until FORMSPREE_ENDPOINT is set, submissions fall back to opening the visitor's email client.
+  const FORMSPREE_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xxxxxxx'
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { name, email, message } = formData;
+    const { name, email, subject, message } = formData;
 
     if (!name || !email || !message) {
       setErrorMsg('Please complete all mandatory fields.');
@@ -70,17 +74,36 @@ export default function Contact() {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    // Simulate sending message
-    setTimeout(() => {
+    if (!FORMSPREE_ENDPOINT) {
+      // Fallback: open a pre-filled email so the message still reaches the inbox.
+      const mailBody = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+      window.location.href = `mailto:sukanyagurav6@gmail.com?subject=${encodeURIComponent(
+        subject || 'Portfolio contact form'
+      )}&body=${mailBody}`;
       setIsSubmitting(false);
       setIsSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 5000);
-    }, 1500);
+      setTimeout(() => setIsSuccess(false), 5000);
+      return;
+    }
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+
+      if (!res.ok) throw new Error('Submission failed');
+
+      setIsSuccess(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (err) {
+      setErrorMsg('Something went wrong sending your message. Please email me directly instead.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -108,7 +131,7 @@ export default function Contact() {
         <div className="max-w-2xl mx-auto w-full">
           
           {/* Contact Form Column */}
-          <div className="contact-form-panel border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] p-8 rounded-none shadow-none">
+          <div className="contact-form-panel border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] p-8 rounded-none shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_24px_rgba(0,213,190,0.18)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_30px_rgba(0,213,190,0.24)] transition-all duration-300">
             <h3 className="font-serif font-light text-2xl italic text-slate-900 dark:text-white mb-6">
               Send Me A Message
             </h3>
@@ -205,7 +228,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 border border-slate-900 dark:border-white bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.2em] text-[10px] font-semibold transition-all duration-300 flex items-center justify-center space-x-2 disabled:bg-slate-300 disabled:cursor-not-allowed cursor-pointer rounded-none"
+                className="w-full py-4 border border-slate-900 dark:border-white bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.2em] text-[10px] font-semibold transition-all duration-300 flex items-center justify-center space-x-2 disabled:bg-slate-300 disabled:cursor-not-allowed cursor-pointer rounded-none shadow-[0_0_0_1px_rgba(0,213,190,0.12),0_0_20px_rgba(0,213,190,0.18)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_28px_rgba(0,213,190,0.24)]"
                 id="contact-submit-btn"
               >
                 {isSubmitting ? (

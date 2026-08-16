@@ -21,7 +21,7 @@ const FALLBACK_PROFILE: GitHubProfile = {
   blog: null,
   location: 'Mumbai, India',
   email: 'sukanyagurav6@gmail.com',
-  bio: 'A passionate Frontend Developer specializing in building interactive, pixel-perfect, and highly responsive user interfaces with modern React and Tailwind CSS.',
+  bio: 'Frontend Developer with 3+ years shipping production interfaces in React and Svelte — turning designs into fast, accessible, pixel-precise experiences.',
   twitter_username: null,
   public_repos: 12,
   public_gists: 0,

@@ -177,7 +177,7 @@ export default function About({ profile }: AboutProps) {
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="stat-card p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 flex items-center space-x-5 group"
+              className="stat-card p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 flex items-center space-x-5 group shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_18px_rgba(0,213,190,0.14)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.2),0_0_24px_rgba(0,213,190,0.2)]"
               id={`stat-card-${idx}`}
             >
               <div className="p-3.5 rounded-none bg-white/40 dark:bg-[#0a0a0a] border border-black/5 dark:border-white/5 transition-colors">
@@ -246,7 +246,7 @@ export default function About({ profile }: AboutProps) {
               {coreValues.map((value, idx) => (
                 <div
                   key={idx}
-                  className="p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] flex space-x-5 hover:border-black/20 dark:hover:border-white/20 transition-all duration-500"
+                  className="p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] flex space-x-5 hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_18px_rgba(0,213,190,0.12)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.2),0_0_24px_rgba(0,213,190,0.18)]"
                   id={`value-card-${idx}`}
                 >
                   <div className="p-3 h-fit bg-white/40 dark:bg-[#0a0a0a] border border-black/5 dark:border-white/5 shadow-sm">

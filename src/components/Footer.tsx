@@ -90,7 +90,7 @@ export default function Footer() {
             {/* Back to top clicker */}
             <button
               onClick={handleScrollToTop}
-              className="p-2.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white bg-transparent transition-all duration-300 shadow-none cursor-pointer rounded-none"
+              className="p-2.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white bg-transparent transition-all duration-300 shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_14px_rgba(0,213,190,0.12)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.22),0_0_22px_rgba(0,213,190,0.18)] cursor-pointer rounded-none"
               title="Back to top"
               aria-label="Back to top"
               id="footer-back-to-top"

@@ -101,7 +101,7 @@ export default function Skills() {
           {filteredSkills.map((skill) => (
             <div
               key={skill.name}
-              className="skill-item-card p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 group"
+              className="skill-item-card p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 group shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_20px_rgba(0,213,190,0.14)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_26px_rgba(0,213,190,0.22)]"
               id={`skill-card-${skill.name.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <div className="flex items-center justify-between">
