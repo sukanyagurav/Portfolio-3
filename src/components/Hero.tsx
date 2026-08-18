@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { ArrowDownRight, Mail, Sparkles, MapPin } from 'lucide-react';
+import { ArrowDownRight, Mail, Sparkles, MapPin, FileText } from 'lucide-react';
 import gsap from 'gsap';
 import { GitHubProfile } from '../types';
 
@@ -159,7 +159,7 @@ export default function Hero({ profile }: HeroProps) {
             >
               <button
                 onClick={() => handleScrollTo('#projects')}
-                className="w-full sm:w-auto px-8 py-3.5 border border-slate-900 dark:border-white bg-slate-900 text-[#faf9f6] dark:bg-white dark:text-slate-950 hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer shadow-[0_0_0_1px_rgba(0,213,190,0.12),0_0_20px_rgba(0,213,190,0.2)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_28px_rgba(0,213,190,0.28)]"
+                className="w-full sm:w-auto px-8 py-3.5 border border-slate-900 dark:border-white bg-slate-900 text-[#faf9f6] dark:bg-white dark:text-slate-950 hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
                 id="hero-cta-projects"
               >
                 Explore Projects
@@ -168,12 +168,22 @@ export default function Hero({ profile }: HeroProps) {
 
               <button
                 onClick={() => handleScrollTo('#contact')}
-                className="w-full sm:w-auto px-8 py-3.5 border border-slate-300 dark:border-white/25 bg-transparent text-slate-800 dark:text-white hover:border-slate-900 dark:hover:border-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_16px_rgba(0,213,190,0.14)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.2),0_0_24px_rgba(0,213,190,0.2)]"
+                className="w-full sm:w-auto px-8 py-3.5 border border-slate-300 dark:border-white/25 bg-transparent text-slate-800 dark:text-white hover:border-slate-900 dark:hover:border-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
                 id="hero-cta-contact"
               >
                 <Mail size={14} />
                 Get in Touch
               </button>
+
+              <a
+                href="/resume.pdf"
+                download="Sukanya_Gurav_Resume.pdf"
+                className="w-full sm:w-auto px-8 py-3.5 border border-slate-300 dark:border-white/25 bg-transparent text-slate-800 dark:text-white hover:border-slate-900 dark:hover:border-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                id="hero-cta-resume"
+              >
+                <FileText size={14} />
+                Download Resume
+              </a>
             </div>
           </div>
 

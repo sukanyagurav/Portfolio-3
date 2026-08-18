@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import { GitHubProfile } from './types';
 import projectsData from './constant/projectsData';
+import BackToTop from './components/BackToTop';
 
 // Fallback high-fidelity profile data in case API fails/rate limits
 const FALLBACK_PROFILE: GitHubProfile = {
@@ -88,6 +89,8 @@ export default function App() {
         {/* Polished Interactive Contact Section */}
         <Contact />
       </main>
+            <BackToTop />
+
 
       {/* Footer Branding and directory */}
       <Footer />

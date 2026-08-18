@@ -1,10 +1,7 @@
 import React from 'react';
-import { ArrowUp, Github, Mail, Linkedin } from 'lucide-react';
+import { Github, Mail, Linkedin } from 'lucide-react';
 
 export default function Footer() {
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <footer className="bg-bg-light dark:bg-[#0a0a0a] border-t border-black/5 dark:border-white/10 py-16 transition-colors duration-300">
@@ -29,7 +26,7 @@ export default function Footer() {
           {/* Controls - Socials and Scroll-up */}
           <div className="flex items-center space-x-4">
             {/* Quick socials */}
-            <div className="flex items-center space-x-2 border-r border-black/5 dark:border-white/10 pr-4">
+            <div className="flex items-center space-x-2 pr-4">
               <a
                 href="https://github.com/sukanyagurav"
                 target="_blank"
@@ -87,16 +84,7 @@ export default function Footer() {
               </a>
             </div>
 
-            {/* Back to top clicker */}
-            <button
-              onClick={handleScrollToTop}
-              className="p-2.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white bg-transparent transition-all duration-300 shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_14px_rgba(0,213,190,0.12)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.22),0_0_22px_rgba(0,213,190,0.18)] cursor-pointer rounded-none"
-              title="Back to top"
-              aria-label="Back to top"
-              id="footer-back-to-top"
-            >
-              <ArrowUp size={14} />
-            </button>
+
           </div>
         </div>
 
