@@ -19,14 +19,13 @@ interface ExperienceItem {
 const EXPERIENCES: ExperienceItem[] = [
   {
     id: 'exp-1',
-    role: 'Associate Software Developer',
+    role: 'Software Developer (Frontend)',
     company: 'Kyndryl',
     period: '2023 - Present',
     location: 'Bangalore, India',
     current: true,
     skills: ['Svelte5', 'TypeScript', 'Lit JS'],
     achievements: [
-      // TODO: swap in real numbers/specifics — recruiters weigh quantified impact heavily.
       'Building and maintaining component-driven UIs in Svelte5 and Lit JS for internal enterprise tooling.',
       'Migrated legacy view logic to TypeScript, reducing runtime type errors across shared modules.',
       'Collaborated cross-functionally with backend and design teams to ship features on sprint cadence.',
@@ -34,7 +33,7 @@ const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 'exp-2',
-    role: 'Associate Technical Engineer',
+    role: 'React Developer',
     company: 'Kyndryl',
     period: '2021 - 2023',
     location: 'Bangalore, India',
