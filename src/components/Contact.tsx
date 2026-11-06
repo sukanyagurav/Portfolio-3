@@ -9,11 +9,14 @@ export default function Contact() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailDraftReady, setEmailDraftReady] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   // GSAP Entrance Animations
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.contact-reveal-title',
@@ -51,6 +54,8 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrorMsg('');
+    setEmailDraftReady(false);
+    setIsSuccess(false);
   };
 
   // Sign up free at https://formspree.io, create a form, and paste your endpoint ID below.
@@ -73,17 +78,17 @@ export default function Contact() {
 
     setIsSubmitting(true);
     setErrorMsg('');
+    setEmailDraftReady(false);
+    setIsSuccess(false);
 
     if (!FORMSPREE_ENDPOINT) {
-      // Fallback: open a pre-filled email so the message still reaches the inbox.
+      // The visitor must send the generated draft in their email app.
       const mailBody = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
       window.location.href = `mailto:sukanyagurav6@gmail.com?subject=${encodeURIComponent(
         subject || 'Portfolio contact form'
       )}&body=${mailBody}`;
       setIsSubmitting(false);
-      setIsSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setIsSuccess(false), 5000);
+      setEmailDraftReady(true);
       return;
     }
 
@@ -110,20 +115,17 @@ export default function Contact() {
     <section
       id="contact"
       ref={sectionRef}
-      className="py-24 md:py-36 bg-bg-light dark:bg-[#0a0a0a] border-b border-black/5 dark:border-white/10 transition-colors duration-300"
+      className="py-20 md:py-28 bg-bg-light dark:bg-[#10110f] border-b border-black/5 dark:border-white/10 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
         {/* Section Header */}
-        <div className="contact-reveal-title text-center max-w-3xl mx-auto mb-16 md:mb-20">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-[0.2em] font-sans bg-transparent mb-6">
-            <Mail size={11} className="text-slate-400 dark:text-slate-500" />
-            <span>Let's Connect</span>
-          </div>
-          <h2 className="font-serif font-light text-3xl sm:text-5xl text-slate-900 dark:text-white tracking-wide leading-tight italic">
-            Start A Conversation
+        <div className="contact-reveal-title max-w-3xl mb-12 md:mb-16">
+          <p className="text-sm text-teal-700 dark:text-teal-300 mb-4">Contact</p>
+          <h2 className="font-serif font-medium text-4xl sm:text-6xl text-slate-950 dark:text-white leading-tight">
+            Let’s talk.
           </h2>
-          <p className="font-serif text-lg text-slate-500 dark:text-slate-400 font-light mt-3 max-w-lg mx-auto italic">
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 mt-4 max-w-xl leading-relaxed">
             Have a project in mind, need a talented engineer, or just want to discuss web technology? My inbox is always open.
           </p>
         </div>
@@ -131,10 +133,15 @@ export default function Contact() {
         <div className="max-w-2xl mx-auto w-full">
           
           {/* Contact Form Column */}
-          <div className="contact-form-panel border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] p-8 rounded-none shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_24px_rgba(0,213,190,0.18)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_30px_rgba(0,213,190,0.24)] transition-all duration-300">
-            <h3 className="font-serif font-light text-2xl italic text-slate-900 dark:text-white mb-6">
+          <div className="contact-form-panel border-t border-black/10 dark:border-white/15 pt-8">
+            <h3 className="font-serif font-medium text-2xl text-slate-950 dark:text-white mb-4">
               Send Me A Message
             </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+              {FORMSPREE_ENDPOINT
+                ? 'Your message will be submitted through the contact form.'
+                : 'Submitting opens a draft in your email app; send it there to complete your message.'}
+            </p>
 
             {/* Form submission */}
             <form onSubmit={handleSubmit} className="space-y-6" id="contact-message-form">
@@ -142,7 +149,7 @@ export default function Contact() {
                 
                 {/* Full name input */}
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-[9px] uppercase tracking-[0.15em] font-sans font-semibold text-slate-500 dark:text-slate-400">
+                  <label htmlFor="name" className="text-sm font-medium text-slate-600 dark:text-slate-300">
                     Full Name <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -153,13 +160,13 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your Name"
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-none text-sm placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white font-serif"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#20211e] border border-black/10 dark:border-white/10 rounded-none text-base placeholder-slate-400 focus:border-teal-700 dark:focus:border-teal-300 transition-colors duration-200 text-slate-800 dark:text-white"
                   />
                 </div>
 
                 {/* Email address input */}
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-[9px] uppercase tracking-[0.15em] font-sans font-semibold text-slate-500 dark:text-slate-400">
+                  <label htmlFor="email" className="text-sm font-medium text-slate-600 dark:text-slate-300">
                     Email Address <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -170,7 +177,7 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-none text-sm placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white font-serif"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#20211e] border border-black/10 dark:border-white/10 rounded-none text-base placeholder-slate-400 focus:border-teal-700 dark:focus:border-teal-300 transition-colors duration-200 text-slate-800 dark:text-white"
                   />
                 </div>
 
@@ -178,7 +185,7 @@ export default function Contact() {
 
               {/* Subject Input */}
               <div className="space-y-2">
-                <label htmlFor="subject" className="text-[9px] uppercase tracking-[0.15em] font-sans font-semibold text-slate-500 dark:text-slate-400">
+                <label htmlFor="subject" className="text-sm font-medium text-slate-600 dark:text-slate-300">
                   Subject
                 </label>
                 <input
@@ -188,13 +195,13 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="What is this regarding?"
-                  className="w-full px-4 py-3 bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-none text-sm placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white font-serif"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#20211e] border border-black/10 dark:border-white/10 rounded-none text-base placeholder-slate-400 focus:border-teal-700 dark:focus:border-teal-300 transition-colors duration-200 text-slate-800 dark:text-white"
                 />
               </div>
 
               {/* Message text area */}
               <div className="space-y-2">
-                <label htmlFor="message" className="text-[9px] uppercase tracking-[0.15em] font-sans font-semibold text-slate-500 dark:text-slate-400">
+                <label htmlFor="message" className="text-sm font-medium text-slate-600 dark:text-slate-300">
                   Message <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -205,20 +212,27 @@ export default function Contact() {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Write your message here..."
-                  className="w-full px-4 py-3 bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 rounded-none text-sm placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all text-slate-800 dark:text-white resize-none font-serif"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#20211e] border border-black/10 dark:border-white/10 rounded-none text-base placeholder-slate-400 focus:border-teal-700 dark:focus:border-teal-300 transition-colors duration-200 text-slate-800 dark:text-white resize-none"
                 />
               </div>
 
               {/* Alert prompt handlers */}
               {errorMsg && (
-                <div className="p-4 border border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/10 text-rose-600 dark:text-rose-400 rounded-none text-xs flex items-center space-x-2 font-mono uppercase tracking-[0.1em]">
+                <div role="alert" className="p-4 border border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/10 text-rose-600 dark:text-rose-400 rounded-none text-xs flex items-center space-x-2 font-mono uppercase tracking-[0.1em]">
                   <AlertCircle size={13} />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
+              {emailDraftReady && (
+                <div role="status" aria-live="polite" className="p-4 border border-sky-500/20 bg-sky-50/50 dark:bg-sky-950/10 text-sky-700 dark:text-sky-300 rounded-none text-xs flex items-center space-x-2 font-mono uppercase tracking-[0.1em]">
+                  <Mail size={13} />
+                  <span>Your email app should open with a draft. Send it there to complete your message.</span>
+                </div>
+              )}
+
               {isSuccess && (
-                <div className="p-4 border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/10 text-emerald-600 dark:text-emerald-400 rounded-none text-xs flex items-center space-x-2 font-mono uppercase tracking-[0.1em]">
+                <div role="status" aria-live="polite" className="p-4 border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/10 text-emerald-600 dark:text-emerald-400 rounded-none text-xs flex items-center space-x-2 font-mono uppercase tracking-[0.1em]">
                   <CheckCircle size={13} />
                   <span>Success! Your message was sent cleanly. I will respond to you shortly.</span>
                 </div>

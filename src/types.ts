@@ -51,4 +51,5 @@ export interface CustomProject {
   githubLink: string;
   description?: string;
   tech?: string[];
+  category?: 'featured' | 'practice' | 'carousel';
 }

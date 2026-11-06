@@ -1,3 +1,4 @@
+/** @type {import('../types').CustomProject[]} */
 export default [
     {
         id:7,
@@ -12,7 +13,7 @@ export default [
     {
         id:4,
         name:'Merch Maze — Ecommerce Cart',
-        imageUrl:'./Projects/Merch-Maze-ecommerce-site.png',
+        imageUrl:'./Projects/Merch-Maze-ecommerce-site.jpg',
         liveLink:'https://merchmaze5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Ecommerce-site',
         category:'featured',
@@ -22,7 +23,7 @@ export default [
     {
         id:11,
         name:'Find Your Stay',
-        imageUrl:'./Projects/art-gallery-website.jpg',
+        imageUrl:'./Projects/find-your-stays.jpg',
         liveLink:'https://find-your-stays-5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Property-Listing-App',
         category:'featured',
@@ -85,15 +86,15 @@ export default [
         imageUrl:'./Projects/character-counter-preview.jpg',
         liveLink:'https://charactercount5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Character-counter',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:5,
         name:'Galleria',
-        imageUrl:'./Projects/galleria.png',
+        imageUrl:'./Projects/galleria.jpg',
         liveLink:'https://galleria5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Galleria',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:6,
@@ -101,15 +102,15 @@ export default [
         imageUrl:'./Projects/buy-your-desserts.jpg',
         liveLink:'https://buydesserts5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Buy-Desserts',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:8,
         name:'Coffee Collections',
-        imageUrl:'./Projects/coffeelisting.png',
+        imageUrl:'./Projects/coffeelisting.jpg',
         liveLink:'https://coffeelisting5867.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Coffee-listing-page',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:10,
@@ -117,7 +118,7 @@ export default [
         imageUrl:'./Projects/art-gallery-website.jpg',
         liveLink:'https://art-gallery-website-mrtjhn6f3-sukanya-guravs-projects.vercel.app/',
         githubLink:'https://github.com/sukanyagurav/Art-gallery-website',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:12,
@@ -125,7 +126,7 @@ export default [
         imageUrl:'./Projects/Launch-countdown-timer.jpg',
         liveLink:'https://sukanyagurav.github.io/Frontend-Mentor---Launch-countdown-timer/',
         githubLink:'https://github.com/sukanyagurav/Frontend-Mentor---Launch-countdown-timer',
-        category:'practice',
+        category:'carousel',
     },
     {
         id:13,
@@ -170,7 +171,7 @@ export default [
     {
         id:21,
         name:'MovieFix App',
-        imageUrl:'./Projects/Movie-Fix-App.png',
+        imageUrl:'./Projects/Movie-Fix-App.jpg',
         liveLink:'https://movielistco.netlify.app/',
         githubLink:'https://github.com/sukanyagurav/Movie_Fix_app',
         category:'practice',

@@ -19,16 +19,78 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
   
   body {
     @apply font-sans transition-colors duration-300;
-    background-color: #0a0a0a;
+    background-color: #10110f;
     color: #f8fafc;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
+  }
+
+  :focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 4px;
+  }
+
+  .project-image-frame {
+    position: relative;
+  }
+
+  .project-image-skeleton {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background-color: #e2e8f0;
+  }
+
+  .dark .project-image-skeleton {
+    background-color: #292a27;
+  }
+
+  .project-image-skeleton::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 35%), transparent);
+    animation: project-image-shimmer 1.4s ease-in-out infinite;
+  }
+
+  .dark .project-image-skeleton::after {
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 9%), transparent);
+  }
+
+  @keyframes project-image-shimmer {
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-image-skeleton::after {
+      animation: none;
+      transform: none;
+      opacity: 0.35;
+    }
   }
 
   @media (pointer: fine) {

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { Github, ExternalLink, Search, Code, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { Github, ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomProject } from '../types';
+import { getFeaturedProjects, getPracticeProjects } from '../constant/projectCollections';
+import ProjectImage from './ProjectImage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,14 +19,16 @@ export default function Projects({ repos }: ProjectsProps) {
   const [archiveOpen, setArchiveOpen] = useState(false);
   const itemsPerPage = 6;
 
-  const featuredRepos = repos.filter((r) => r.category !== 'practice');
-  const practiceRepos = repos.filter((r) => r.category === 'practice');
+  const featuredRepos = getFeaturedProjects(repos);
+  const practiceRepos = getPracticeProjects(repos);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.projects-reveal-header',
@@ -76,62 +80,59 @@ export default function Projects({ repos }: ProjectsProps) {
     <section
       id="projects"
       ref={sectionRef}
-      className="py-24 md:py-36 bg-bg-light dark:bg-[#0a0a0a] border-b border-black/5 dark:border-white/10 transition-colors duration-300"
+      className="py-20 md:py-28 bg-bg-light dark:bg-[#10110f] border-b border-black/5 dark:border-white/10 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
 
         {/* Section Header */}
-        <div className="projects-reveal-header text-center max-w-3xl mx-auto mb-16 md:mb-20">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-[0.2em] font-sans bg-transparent mb-6">
-            <Code size={11} className="text-slate-400 dark:text-slate-500" />
-            <span>Portfolio Work</span>
-          </div>
-          <h2 className="font-serif font-light text-3xl sm:text-5xl text-slate-900 dark:text-white tracking-wide leading-tight italic">
-            Featured Projects
+        <div className="projects-reveal-header max-w-3xl mb-12 md:mb-16">
+          <p className="text-sm text-teal-700 dark:text-teal-300 mb-4">Selected work</p>
+          <h2 className="font-serif font-medium text-4xl sm:text-6xl text-slate-950 dark:text-white leading-tight">
+            Projects
           </h2>
-          <p className="font-serif text-lg text-slate-500 dark:text-slate-400 font-light mt-3 max-w-lg mx-auto italic">
-            Substantial, self-directed builds — each with live demos and source code.
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 mt-4 max-w-xl leading-relaxed">
+            A selection of interfaces and applications I’ve built, with the live work and source
+            available to explore.
           </p>
         </div>
 
         {/* Featured Projects Grid */}
-        <div className="featured-projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <div className="featured-projects-grid grid grid-cols-1 md:grid-cols-[repeat(2,minmax(0,1fr))] gap-x-8 gap-y-14 mb-8">
           {featuredRepos.map((repo) => (
             <div
               key={repo.id}
-              className="featured-project-card group p-6 border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#111] hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 flex flex-col justify-between rounded-none shadow-[0_0_0_1px_rgba(0,213,190,0.08),0_0_22px_rgba(0,213,190,0.18)] hover:shadow-[0_0_0_1px_rgba(0,213,190,0.25),0_0_28px_rgba(0,213,190,0.28)]"
+              className="featured-project-card group flex min-w-0 flex-col"
               id={`repo-card-${repo.name.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <a
                   href={repo.liveLink || repo.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block overflow-hidden"
+                  aria-label={`Open ${repo.name} project`}
                 >
-                  <div className="relative aspect-[16/10] w-full overflow-hidden border border-black/5 dark:border-white/5 bg-slate-100 dark:bg-neutral-900">
-                    <img
-                      src={repo.imageUrl}
-                      alt={repo.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
-                  </div>
+                  <ProjectImage
+                    src={repo.imageUrl}
+                    alt={`${repo.name} project preview`}
+                    frameClassName="aspect-[16/10] w-full overflow-hidden bg-slate-200 dark:bg-[#20211e]"
+                    imageClassName="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+                  />
                 </a>
 
                 <a
                   href={repo.liveLink || repo.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block hover:opacity-80 transition-opacity"
+                  className="block"
                 >
-                  <h3 className="font-serif italic text-lg text-slate-900 dark:text-white tracking-wide group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors">
+                  <h3 className="font-serif text-2xl text-slate-950 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors duration-200">
                     {repo.name}
                   </h3>
                 </a>
 
                 {repo.description && (
-                  <p className="font-serif text-sm font-light text-slate-500 dark:text-slate-400 leading-relaxed">
+                  <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                     {repo.description}
                   </p>
                 )}
@@ -141,7 +142,7 @@ export default function Projects({ repos }: ProjectsProps) {
                     {repo.tech.map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-1 text-[9px] uppercase tracking-[0.1em] font-sans font-semibold text-slate-500 dark:text-slate-400 border border-black/10 dark:border-white/10"
+                        className="text-sm text-slate-500 dark:text-slate-400"
                       >
                         {t}
                       </span>
@@ -155,7 +156,7 @@ export default function Projects({ repos }: ProjectsProps) {
                   href={repo.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 border border-black/10 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all text-xs uppercase tracking-[0.12em] font-semibold rounded-none"
+                  className="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 underline decoration-slate-400 underline-offset-4 hover:decoration-teal-300 transition-colors duration-200"
                   title="View source code"
                 >
                   <Github size={12} />
@@ -165,7 +166,7 @@ export default function Projects({ repos }: ProjectsProps) {
                   href={repo.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 border border-black/10 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all text-xs uppercase tracking-[0.12em] font-semibold rounded-none"
+                  className="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 underline decoration-slate-400 underline-offset-4 hover:decoration-teal-300 transition-colors duration-200"
                   title="Open live demo"
                 >
                   <span>Live Demo</span>
@@ -177,23 +178,26 @@ export default function Projects({ repos }: ProjectsProps) {
         </div>
 
         {/* Practice Archive Toggle */}
-        <div id="projects-archive" className="max-w-5xl mx-auto pt-16 border-t border-black/5 dark:border-white/10">
+        <div id="projects-archive" className="pt-12 border-t border-black/10 dark:border-white/15">
           <button
             onClick={() => setArchiveOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-6 py-4 border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all bg-white/50 dark:bg-[#111] cursor-pointer"
+            aria-expanded={archiveOpen}
+            aria-controls="practice-projects-content"
+            className="w-full max-w-5xl flex items-center justify-between py-4 text-left text-lg text-slate-800 dark:text-slate-100 hover:text-teal-700 dark:hover:text-teal-300 transition-colors duration-200 cursor-pointer"
             id="toggle-practice-archive"
           >
-            <span className="font-serif italic text-base text-slate-700 dark:text-slate-300">
-             View more projects
-            </span>
+            <span className="font-serif text-2xl">More projects</span>
             <ChevronDown
               size={16}
               className={`text-slate-400 transition-transform duration-300 ${archiveOpen ? 'rotate-180' : ''}`}
             />
           </button>
 
-          {archiveOpen && (
-            <div className="mt-8 space-y-8">
+          <div
+            id="practice-projects-content"
+            hidden={!archiveOpen}
+            className="mt-8 space-y-8"
+          >
               {/* Search Bar */}
               <div className="relative w-full">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
@@ -201,6 +205,7 @@ export default function Projects({ repos }: ProjectsProps) {
                 </span>
                 <input
                   type="text"
+                  aria-label="Search practice projects"
                   placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -232,7 +237,7 @@ export default function Projects({ repos }: ProjectsProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            title="View source code"
+                            aria-label={`View ${repo.name} source code`}
                           >
                             <Github size={13} />
                           </a>
@@ -241,7 +246,7 @@ export default function Projects({ repos }: ProjectsProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            title="Open live demo"
+                            aria-label={`Open ${repo.name} live demo`}
                           >
                             <ExternalLink size={13} />
                           </a>
@@ -295,7 +300,6 @@ export default function Projects({ repos }: ProjectsProps) {
                 </>
               )}
             </div>
-          )}
         </div>
 
       </div>
