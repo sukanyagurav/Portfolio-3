@@ -9,17 +9,26 @@ export default function BackToTop() {
   };
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      // Show button when page is scrolled down
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+    let frameId: number | null = null;
+
+    const updateVisibility = () => {
+      frameId = null;
+      const shouldBeVisible = window.scrollY > 300;
+      setIsVisible((current) =>
+        current === shouldBeVisible ? current : shouldBeVisible,
+      );
     };
 
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    const scheduleUpdate = () => {
+      if (frameId === null) frameId = requestAnimationFrame(updateVisibility);
+    };
+
+    scheduleUpdate();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      if (frameId !== null) cancelAnimationFrame(frameId);
+    };
   }, []);
 
   return (

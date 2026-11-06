@@ -4,22 +4,19 @@ import { Github, Mail, Linkedin } from 'lucide-react';
 export default function Footer() {
 
   return (
-    <footer className="bg-bg-light dark:bg-[#0a0a0a] border-t border-black/5 dark:border-white/10 py-16 transition-colors duration-300">
+    <footer className="bg-bg-light dark:bg-[#10110f] border-t border-black/5 dark:border-white/10 py-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
           {/* Logo and Tagline block */}
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-slate-900 text-bg-light dark:bg-white dark:text-slate-950 flex items-center justify-center font-sans font-bold text-xs rounded-none">
-                SG
-              </div>
-              <span className="font-serif font-light text-lg text-slate-800 dark:text-white tracking-wide italic">
+              <img src="/logo.svg" alt="" aria-hidden="true" className="h-9 w-9" />
+              <span className="font-serif text-lg text-slate-800 dark:text-white">
                 Sukanya Gurav
               </span>
             </div>
-            <p className="font-serif font-light text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed italic">
-              Designing interfaces and coding modern reactive web systems with
-              structural excellence.
+            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+              Frontend developer working with React and Svelte.
             </p>
           </div>
 

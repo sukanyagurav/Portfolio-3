@@ -14,11 +14,12 @@ This project showcases portfolio work, skills, experience, and contact informati
 - Animated section reveals with GSAP and ScrollTrigger
 - Responsive navigation and mobile menu
 - Custom cursor for desktop interactions
+- Compressed project previews with lazy-loaded image skeletons
 - Footer with social links and quick actions
 
 ## Project structure
 
-- `src/App.tsx` - main page composition and GitHub profile fetch
+- `src/App.tsx` - main page composition
 - `src/components/` - page sections and reusable UI components
 - `src/constant/projectsData.js` - local project metadata used in the portfolio
 - `src/types.ts` - shared TypeScript types
@@ -53,7 +54,7 @@ npm run build
 
 ## Notes
 
-- The portfolio uses a local `projectsData` file instead of live GitHub repository fetches for the projects section.
+- Portfolio content and project details are maintained locally; the page does not depend on a live GitHub profile request.
 - The site forces dark mode by default via `document.documentElement.classList.add('dark')`.
 
 ## Customize
@@ -61,7 +62,7 @@ npm run build
 - Update `src/constant/projectsData.js` to change displayed projects.
 - Edit `src/components/Footer.tsx` to update social links and footer actions.
 - Modify `src/components/Skills.tsx` to change the skill list.
-- Update `src/App.tsx` and `src/types.ts` if you want to customize profile or data behavior.
+- Update `src/App.tsx` to change page section order.
 
 ## Scripts
 
@@ -69,3 +70,4 @@ npm run build
 - `npm run build` — build production output
 - `npm run preview` — preview the production build
 - `npm run lint` — run TypeScript type checking
+- `npm test` — run project collection tests

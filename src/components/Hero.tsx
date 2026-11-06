@@ -1,192 +1,192 @@
-import { useEffect, useRef } from 'react';
-import { ArrowDownRight, Mail, Sparkles, MapPin, FileText } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowDownRight, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import gsap from 'gsap';
-import { GitHubProfile } from '../types';
+import projectsData from '../constant/projectsData';
+import { getCarouselProjects } from '../constant/projectCollections';
+import ProjectImage from './ProjectImage';
 
-interface HeroProps {
-  profile: GitHubProfile | null;
-}
+const CAROUSEL_PROJECTS = getCarouselProjects(projectsData);
 
-export default function Hero({ profile }: HeroProps) {
+export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLDivElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
+  const activeProject = CAROUSEL_PROJECTS[activeProjectIndex];
+  const carouselSlideRef = useRef<HTMLDivElement>(null);
 
-  // GSAP Entrance Animations
+  const showProject = (index: number, direction: number) => {
+    setSlideDirection(direction);
+    setActiveProjectIndex((index + CAROUSEL_PROJECTS.length) % CAROUSEL_PROJECTS.length);
+  };
+
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Background gradient animation
-      gsap.to('.hero-bg-blob-1', {
-        x: '30%',
-        y: '-10%',
-        duration: 8,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-      gsap.to('.hero-bg-blob-2', {
-        x: '-20%',
-        y: '20%',
-        duration: 10,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      // Typographic reveal timeline
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.fromTo(
-        '.hero-pre',
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.6, delay: 0.3 }
-      )
-        .fromTo(
-          titleRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8 },
-          '-=0.4'
-        )
-        .fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.7 },
-          '-=0.5'
-        )
-        .fromTo(
-          descRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.7 },
-          '-=0.5'
-        )
-        .fromTo(
-          ctaRef.current,
-          { opacity: 0, scale: 0.95 },
-          { opacity: 1, scale: 1, duration: 0.6 },
-          '-=0.4'
-        );
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.hero-copy > *',
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: 'power2.out' }
+      );
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const handleScrollTo = (id: string) => {
-    const target = document.querySelector(id);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  useEffect(() => {
+    const nextProject =
+      CAROUSEL_PROJECTS[(activeProjectIndex + 1) % CAROUSEL_PROJECTS.length];
+    if (!nextProject) return;
 
-  const displayName = profile?.name || 'Sukanya Gurav';
-  const displayBio = profile?.bio || 'A passionate Frontend Developer specializing in creating interactive, pixel-perfect, and highly responsive user experiences.';
-  const displayLocation = profile?.location || 'India';
+    const image = new Image();
+    image.src = nextProject.imageUrl;
+  }, [activeProjectIndex]);
+
+  useEffect(() => {
+    if (!carouselSlideRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const tween = gsap.fromTo(
+      carouselSlideRef.current,
+      { autoAlpha: 0.75, x: slideDirection * 10 },
+      { autoAlpha: 1, x: 0, duration: 0.48, ease: 'power3.out', overwrite: true }
+    );
+
+    return () => {
+      tween.kill();
+    };
+  }, [activeProjectIndex, slideDirection]);
 
   return (
     <section
       id="home"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-bg-light dark:bg-[#0a0a0a] transition-colors duration-300"
+      className="relative min-h-[min(800px,100svh)] flex items-center bg-bg-light dark:bg-[#10110f] text-slate-900 dark:text-white"
     >
-      {/* Background Animated Gradient Blobs - Muted for sophisticated feeling */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-slate-200/40 dark:bg-zinc-800/20 blur-3xl hero-bg-blob-1 pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-zinc-200/40 dark:bg-neutral-900/10 blur-3xl hero-bg-blob-2 pointer-events-none" />
-
-      {/* Grid Overlay for subtle editorial structure */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-20 relative z-10 w-full">
-        <div className="max-w-4xl mx-auto text-center space-y-10">
-          
-          {/* Typographic Content Center Column */}
-          <div className="space-y-8 w-full flex flex-col items-center">
-            
-            {/* Minimalist Editorial Tag */}
-            <div
-              id="hero-available-tag"
-              className="hero-pre inline-flex items-center space-x-2 px-4 py-1.5 border border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-[0.2em] font-sans bg-transparent"
-            >
-              <Sparkles size={11} className="animate-pulse text-slate-400 dark:text-slate-500" />
-              <span>Available for Freelance & Projects</span>
-            </div>
-
-            {/* Main Greeting and Name */}
-            <div className="space-y-3">
-              <h1
-                ref={titleRef}
-                className="font-serif font-light text-5xl sm:text-6xl md:text-8xl leading-none text-slate-900 dark:text-white tracking-wide"
-              >
-                {displayName}
-              </h1>
-            </div>
-
-            {/* Dynamic Animated Subtitle Roles */}
-            <div
-              ref={subtitleRef}
-              className="text-[11px] font-sans uppercase tracking-[0.25em] text-slate-500 dark:text-[#888] flex flex-wrap items-center justify-center gap-3"
-            >
-              <span>Creative Frontend Engineer</span>
-              <span className="text-slate-300 dark:text-slate-800">•</span>
-              <span>React Developer</span>
-            </div>
-
-            {/* Bio / Description */}
-            <p
-              ref={descRef}
-              className="max-w-2xl mx-auto font-serif text-lg sm:text-xl md:text-2xl font-light italic text-slate-700 dark:text-slate-300 leading-relaxed"
-            >
-              "{displayBio}"
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 lg:px-12 pt-28 pb-16 md:pt-32 md:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-center">
+          <div className="hero-copy max-w-xl">
+            <p className="text-sm text-teal-700 dark:text-teal-300 mb-6">
+              Frontend developer · Mumbai, India
             </p>
-
-            {/* Meta Information (Location, GitHub Bio, etc.) */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-[10px] text-slate-400 dark:text-slate-500 font-sans tracking-[0.15em] uppercase">
-              <span className="flex items-center gap-2">
-                <MapPin size={12} className="text-slate-400 dark:text-slate-500" />
-                {displayLocation}
-              </span>
-              {profile && (
-                <span className="flex items-center gap-2 border-l border-slate-200 dark:border-white/10 pl-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-600" />
-                  {profile.public_repos} public repositories
-                </span>
-              )}
-            </div>
-
-            {/* Action CTAs */}
-            <div
-              ref={ctaRef}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full sm:w-auto"
-            >
-              <button
-                onClick={() => handleScrollTo('#projects')}
-                className="w-full sm:w-auto px-8 py-3.5 border border-slate-900 dark:border-white bg-slate-900 text-[#faf9f6] dark:bg-white dark:text-slate-950 hover:bg-transparent hover:text-slate-900 dark:hover:bg-transparent dark:hover:text-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
-                id="hero-cta-projects"
-              >
-                Explore Projects
-                <ArrowDownRight size={14} className="group-hover:translate-x-1 group-hover:translate-y-1 transition-transform duration-300" />
-              </button>
-
-              <button
-                onClick={() => handleScrollTo('#contact')}
-                className="w-full sm:w-auto px-8 py-3.5 border border-slate-300 dark:border-white/25 bg-transparent text-slate-800 dark:text-white hover:border-slate-900 dark:hover:border-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-                id="hero-cta-contact"
-              >
-                <Mail size={14} />
-                Get in Touch
-              </button>
-
+            <h1 className="font-serif font-medium text-6xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-slate-950 dark:text-white">
+              Sukanya
+              <br />
+              Gurav
+            </h1>
+            <p className="mt-7 max-w-lg text-lg sm:text-xl leading-relaxed text-slate-600 dark:text-slate-300">
+              I build thoughtful, responsive web experiences with React and Svelte.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <a
-                href="/resume.pdf"
-                download="Sukanya_Gurav_Resume.pdf"
-                className="w-full sm:w-auto px-8 py-3.5 border border-slate-300 dark:border-white/25 bg-transparent text-slate-800 dark:text-white hover:border-slate-900 dark:hover:border-white font-sans uppercase tracking-[0.25em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-                id="hero-cta-resume"
+                href="#projects"
+                className="inline-flex items-center gap-2 bg-teal-300 px-5 py-3 text-sm font-medium text-slate-950 hover:bg-teal-200 transition-colors duration-200"
               >
-                <FileText size={14} />
-                Download Resume
+                Explore my work
+                <ArrowDownRight size={16} aria-hidden="true" />
+              </a>
+              <a
+                href="#contact"
+                className="text-sm text-slate-700 dark:text-slate-200 underline decoration-slate-400 underline-offset-4 hover:decoration-teal-300 transition-colors duration-200"
+              >
+                Get in touch
               </a>
             </div>
           </div>
 
+          {activeProject && (
+            <div
+              className="min-w-0"
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="More projects"
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowLeft') {
+                  event.preventDefault();
+                  showProject(activeProjectIndex - 1, -1);
+                } else if (event.key === 'ArrowRight') {
+                  event.preventDefault();
+                  showProject(activeProjectIndex + 1, 1);
+                }
+              }}
+            >
+              <div ref={carouselSlideRef}>
+                <a
+                  href={activeProject.liveLink || activeProject.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${activeProject.name} live project`}
+                  className="group relative block min-w-0"
+                >
+                  <ProjectImage
+                    key={activeProject.id}
+                    src={activeProject.imageUrl}
+                    alt={`${activeProject.name} application preview`}
+                    loading={activeProjectIndex === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={activeProjectIndex === 0 ? 'high' : 'auto'}
+                    frameClassName="overflow-hidden bg-[#1a1b18] aspect-[16/10]"
+                    imageClassName="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                  <div className="mt-4 flex items-start justify-between gap-6 border-b border-black/10 dark:border-white/15 pb-4">
+                    <div aria-live="polite" aria-atomic="true">
+                      <h2 className="mt-1 font-serif text-2xl text-slate-900 dark:text-white">
+                        {activeProject.name}
+                      </h2>
+                    </div>
+                    <ExternalLink
+                      size={18}
+                      className="mt-2 shrink-0 text-teal-700 dark:text-teal-300"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </a>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2" aria-label="Choose a project">
+                  {CAROUSEL_PROJECTS.map((project, index) => (
+                    <button
+                      key={project.id}
+                      type="button"
+                      onClick={() =>
+                        showProject(index, index >= activeProjectIndex ? 1 : -1)
+                      }
+                      aria-label={`Show project ${index + 1}: ${project.name}`}
+                      aria-current={index === activeProjectIndex ? 'true' : undefined}
+                      className={`h-2.5 rounded-full transition-[width,background-color] duration-500 ease-out ${
+                        index === activeProjectIndex
+                          ? 'w-7 bg-teal-500'
+                          : 'w-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-teal-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="mr-2 text-sm tabular-nums text-slate-500 dark:text-slate-400" aria-live="polite">
+                    {String(activeProjectIndex + 1).padStart(2, '0')} / {String(CAROUSEL_PROJECTS.length).padStart(2, '0')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => showProject(activeProjectIndex - 1, -1)}
+                    aria-label="Previous project"
+                    className="inline-flex h-10 w-10 items-center justify-center border border-black/10 text-slate-700 transition-colors duration-200 hover:border-teal-500 hover:text-teal-700 dark:border-white/15 dark:text-slate-200 dark:hover:text-teal-300"
+                  >
+                    <ChevronLeft size={18} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showProject(activeProjectIndex + 1, 1)}
+                    aria-label="Next project"
+                    className="inline-flex h-10 w-10 items-center justify-center border border-black/10 text-slate-700 transition-colors duration-200 hover:border-teal-500 hover:text-teal-700 dark:border-white/15 dark:text-slate-200 dark:hover:text-teal-300"
+                  >
+                    <ChevronRight size={18} aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

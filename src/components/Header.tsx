@@ -1,24 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Mail, ArrowUpRight } from 'lucide-react';
+import { Menu, X, Github, Mail } from 'lucide-react';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
-
-  // Monitor scroll position to apply dynamic background styling
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Lock body scroll when mobile menu is open to prevent background scrolling
   useEffect(() => {
@@ -57,18 +43,23 @@ export default function Header() {
   }, [isOpen]);
 
   const navLinks = [
-    { name: 'Home', href: '#home', num: '01' },
-    { name: 'About', href: '#about', num: '02' },
-    { name: 'Experience', href: '#experience', num: '03' },
-    { name: 'Projects', href: '#projects', num: '04' },
-    { name: 'Skills', href: '#skills', num: '05' },
-    { name: 'Contact', href: '#contact', num: '06' },
+    { name: 'Home', href: '#home' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Experience', href: '#experience' },
+    { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Contact', href: '#contact' },
   ];
 
-  // Use scroll position to determine which section is currently active.
-  // This is more reliable than a narrow IntersectionObserver when a section is tall.
+  // Batch scroll reads and state updates to at most one per animation frame.
   useEffect(() => {
-    const updateActiveSection = () => {
+    let frameId: number | null = null;
+
+    const updateScrollState = () => {
+      frameId = null;
+      const isScrolled = window.scrollY > 20;
+      setScrolled((current) => (current === isScrolled ? current : isScrolled));
+
       const viewportPosition = window.scrollY + window.innerHeight * 0.35;
       let currentSection = 'home';
 
@@ -84,16 +75,22 @@ export default function Header() {
         }
       });
 
-      setActiveSection(currentSection);
+      setActiveSection((current) =>
+        current === currentSection ? current : currentSection,
+      );
     };
 
-    updateActiveSection();
-    window.addEventListener('scroll', updateActiveSection, { passive: true });
-    window.addEventListener('resize', updateActiveSection);
+    const scheduleUpdate = () => {
+      if (frameId === null) frameId = requestAnimationFrame(updateScrollState);
+    };
 
+    scheduleUpdate();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
     return () => {
-      window.removeEventListener('scroll', updateActiveSection);
-      window.removeEventListener('resize', updateActiveSection);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      if (frameId !== null) cancelAnimationFrame(frameId);
     };
   }, []);
 
@@ -119,7 +116,7 @@ export default function Header() {
         id="header"
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           scrolled || isOpen
-            ? 'bg-[#0a0a0a]/95 backdrop-blur-md shadow-lg border-b border-white/10 py-3.5 sm:py-4'
+            ? 'bg-[#10110f]/95 backdrop-blur-md border-b border-white/10 py-3.5 sm:py-4'
             : 'bg-transparent py-5 sm:py-6'
         }`}
       >
@@ -132,14 +129,10 @@ export default function Header() {
             id="logo-link"
             aria-label="Sukanya Gurav Portfolio Home"
           >
-            <span className="font-sans text-xs md:text-sm uppercase text-white transition-colors duration-300 flex items-center select-none">
-              <span className="flex flex-col items-start -space-y-1">
-                <span className="font-bold tracking-[0.25em] text-white group-hover:text-teal-300 transition-colors duration-300 text-[11px] md:text-xs">
-                  SUKANYA
-                </span>
-                <span className="text-[8px] font-medium tracking-[0.38em] text-slate-400 group-hover:text-white/70 transition-colors duration-300">
-                  GURAV
-                </span>
+            <span className="flex items-center gap-3 select-none">
+              <img src="/logo.svg" alt="" aria-hidden="true" className="h-9 w-9" />
+              <span className="font-sans text-sm font-medium text-white group-hover:text-teal-300 transition-colors duration-200">
+                Sukanya Gurav
               </span>
             </span>
           </a>
@@ -153,7 +146,7 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleLinkClick(e, link.href)}
-                  className={`text-[11px] uppercase tracking-[0.25em] font-sans transition-colors duration-300 relative py-1.5 ${
+                  className={`text-sm font-sans transition-colors duration-200 relative py-1.5 ${
                     isActive
                       ? 'text-white font-semibold'
                       : 'text-slate-400 hover:text-white'
@@ -258,25 +251,14 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleLinkClick(e, link.href)}
-                  className={`group flex items-center justify-between text-xs uppercase tracking-[0.25em] font-sans py-3 px-3 transition-all duration-200 border-l-2 ${
+                  className={`flex items-center justify-between text-base font-sans py-3 px-3 transition-colors duration-200 border-l-2 ${
                     isActive
                       ? 'text-teal-300 font-semibold border-teal-400 bg-teal-500/10'
                       : 'text-slate-300 hover:text-white hover:bg-white/5 border-transparent hover:border-slate-500'
                   }`}
                   id={`mobile-nav-${link.name.toLowerCase()}`}
                 >
-                  <span className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono text-slate-500 group-hover:text-slate-400">
-                      {link.num}
-                    </span>
-                    <span>{link.name}</span>
-                  </span>
-                  <ArrowUpRight
-                    size={14}
-                    className={`transition-transform duration-200 ${
-                      isActive ? 'text-teal-400 opacity-100' : 'text-slate-600 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5'
-                    }`}
-                  />
+                  <span>{link.name}</span>
                 </a>
               );
             })}
@@ -284,16 +266,16 @@ export default function Header() {
         </div>
 
         {/* Drawer Footer Socials & Info */}
-        <div className="p-6 border-t border-white/10 bg-[#121212]">
-          <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400 mb-3 font-sans font-medium">
-            CONNECT WITH ME
+        <div className="p-6 border-t border-white/10 bg-[#10110f]">
+          <p className="text-sm text-slate-400 mb-3 font-sans">
+            Connect with me
           </p>
           <div className="grid grid-cols-2 gap-2.5">
             <a
               href="https://github.com/sukanyagurav"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2.5 text-xs bg-[#1a1a1a] text-slate-200 border border-white/10 hover:text-white hover:border-white/30 hover:bg-[#222] transition-all font-sans tracking-wider"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm bg-[#1a1a1a] text-slate-200 border border-white/10 hover:text-white hover:border-white/30 hover:bg-[#222] transition-colors duration-200 font-sans"
               id="mobile-social-github"
             >
               <Github size={14} />
@@ -301,7 +283,7 @@ export default function Header() {
             </a>
             <a
               href="mailto:sukanyagurav6@gmail.com"
-              className="flex items-center justify-center gap-2 px-3 py-2.5 text-xs bg-[#1a1a1a] text-slate-200 border border-white/10 hover:text-white hover:border-white/30 hover:bg-[#222] transition-all font-sans tracking-wider"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 text-sm bg-[#1a1a1a] text-slate-200 border border-white/10 hover:text-white hover:border-white/30 hover:bg-[#222] transition-colors duration-200 font-sans"
               id="mobile-social-email"
             >
               <Mail size={14} />
