@@ -120,17 +120,30 @@ export default function Projects({ repos }: ProjectsProps) {
                   />
                 </a>
 
-                <a
-                  href={repo.liveLink || repo.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <h3 className="font-serif text-2xl text-slate-950 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors duration-200">
-                    {repo.name}
-                  </h3>
-                </a>
-
+                <div className="flex items-center justify-between gap-4">
+                  <a
+                    href={repo.liveLink || repo.githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={repo.name}
+                    className="min-w-0 flex-1"
+                  >
+                    <h3 className="truncate font-serif text-2xl text-slate-950 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors duration-200">
+                      {repo.name}
+                    </h3>
+                  </a>
+                  <a
+                    href={repo.githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${repo.name} source code`}
+                    title="View source code"
+                    className="shrink-0 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors duration-200"
+                  >
+                    <Github size={18} />
+                  </a>
+                </div>
+                
                 {repo.description && (
                   <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                     {repo.description}
@@ -142,7 +155,7 @@ export default function Projects({ repos }: ProjectsProps) {
                     {repo.tech.map((t) => (
                       <span
                         key={t}
-                        className="text-sm text-slate-500 dark:text-slate-400"
+                       className="inline-flex items-center rounded-full border border-slate-300/70 dark:border-white/15 bg-white/70 dark:bg-white/[0.04] px-3 py-1.5 text-sm text-slate-700 dark:text-slate-200"
                       >
                         {t}
                       </span>
@@ -151,28 +164,7 @@ export default function Projects({ repos }: ProjectsProps) {
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-2 mt-5">
-                <a
-                  href={repo.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 underline decoration-slate-400 underline-offset-4 hover:decoration-teal-300 transition-colors duration-200"
-                  title="View source code"
-                >
-                  <Github size={12} />
-                  Source
-                </a>
-                <a
-                  href={repo.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 underline decoration-slate-400 underline-offset-4 hover:decoration-teal-300 transition-colors duration-200"
-                  title="Open live demo"
-                >
-                  <span>Live Demo</span>
-                  <ExternalLink size={12} />
-                </a>
-              </div>
+              
             </div>
           ))}
         </div>
