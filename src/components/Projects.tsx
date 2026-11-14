@@ -109,7 +109,7 @@ export default function Projects({ repos }: ProjectsProps) {
                   href={repo.liveLink || repo.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block overflow-hidden"
+                  className="block rounded-sm transition-shadow duration-300 group-hover:shadow-lg dark:group-hover:shadow-white/10"
                   aria-label={`Open ${repo.name} project`}
                 >
                   <ProjectImage
