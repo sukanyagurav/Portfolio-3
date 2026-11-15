@@ -81,10 +81,14 @@ export default function Hero() {
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 bg-teal-300 px-5 py-3 text-sm font-medium text-slate-950 hover:bg-teal-200 transition-colors duration-200"
+                className="group inline-flex items-center gap-2 bg-teal-300 px-5 py-3 text-sm font-medium text-slate-950 hover:bg-teal-200 transition-colors duration-200"
               >
                 Explore my work
-                <ArrowDownRight size={16} aria-hidden="true" />
+                <ArrowDownRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:rotate-90"
+                  aria-hidden="true"
+                />
               </a>
               <a
                 href="#contact"

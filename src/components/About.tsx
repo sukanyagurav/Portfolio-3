@@ -33,12 +33,12 @@ export default function About() {
               {principles.map((principle) => (
                 <li
                   key={principle}
-                  className="flex items-center justify-between gap-6 py-4 text-base text-slate-700 dark:text-slate-200"
+                  className="flex items-center justify-between gap-6 py-4 text-base text-slate-700 dark:text-slate-200 group"
                 >
                   {principle}
                   <ArrowUpRight
                     size={16}
-                    className="shrink-0 text-teal-700 dark:text-teal-300"
+                    className="shrink-0 text-teal-700 dark:text-teal-300 transition-transform duration-300 group-hover:rotate-90"
                     aria-hidden="true"
                   />
                 </li>
